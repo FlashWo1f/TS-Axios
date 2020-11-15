@@ -1,3 +1,5 @@
+all in `https://www.tslang.cn/docs/handbook/`
+
 ## 相对之前不清楚的一些概念
 
 ### 类型断言

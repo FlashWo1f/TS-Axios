@@ -45,3 +45,35 @@ console.log("card: " + pickedCard1.card + " of " + pickedCard1.suit);
 let pickedCard2 = pickCard(15);
 console.log("card: " + pickedCard2.card + " of " + pickedCard2.suit);
 ```
+
+
+### 泛型
+
+```ts
+function identity<T>(arg: T): T {
+  return arg
+}
+// 泛型接口
+interface GenericIdentityFn {
+  <T>(arg: T): T;
+}
+
+let myIdentity3: GenericIdentityFn = identity;
+// 将类型定在声明时的泛型接口
+interface GenericIdentityFn1<T> {
+  (arg: T): T
+}
+
+let myIdentity4: GenericIdentityFn1<number> = identity
+
+console.log(myIdentity4(3))
+// 泛型类
+class GenericNumber<T> {
+    zeroValue: T;
+    add: (x: T, y: T) => T;
+}
+// 类有两部分：静态部分和实例部分。 泛型类指的是实例部分的类型，所以类的静态属性不能使用这个泛型类型。
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function(x, y) { return x + y; };
+```

@@ -77,3 +77,28 @@ let myGenericNumber = new GenericNumber<number>();
 myGenericNumber.zeroValue = 0;
 myGenericNumber.add = function(x, y) { return x + y; };
 ```
+
+### 类型兼容性
+很少用的不做记录
+```ts
+interface Named {
+  name: string
+}
+class Person {
+  name: string
+}
+let p: Named
+// same structural typing
+p = new Person()
+```
+如果 x 要兼容 y，那么 y 至少具有与 x 相同的属性。比如：
+```ts
+interface Named {
+    name: string;
+}
+
+let x: Named;
+// y 的推断类型为 { name: string; location: string; }
+let y = { name: 'Alice', location: 'Seattle' };
+x = y;
+```

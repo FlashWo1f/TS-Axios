@@ -121,3 +121,11 @@ npm install
 使用 Semantic release帮助我们管理版本和发布。
 使用 husky帮助我们更简单地使用 git hooks。
 使用 Conventional changelog帮助我们通过代码提交信息自动生成 change log。
+
+### tsconfig.json
+
+详见 Typescript 官网 的介绍
+
+### XMLHttpRequest !important
+
+https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest

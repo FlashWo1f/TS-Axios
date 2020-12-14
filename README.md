@@ -102,3 +102,10 @@ let x: Named;
 let y = { name: 'Alice', location: 'Seattle' };
 x = y;
 ```
+
+## 初始化项目
+
+git clone https://github.com/alexjoverm/typescript-library-starter.git ts-axios
+cd ts-axios
+
+npm install

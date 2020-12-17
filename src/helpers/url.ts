@@ -46,7 +46,7 @@ export function buildURL(url: string, params?: any): string {
     if (markIndex !== -1) {
       url = url.slice(0, markIndex)
     }
-    url += (serializedParams.includes('?') ? '?' : '&') + serializedParams
+    url += (serializedParams.includes('?') ? '&' : '?') + serializedParams
   }
   return url
 }

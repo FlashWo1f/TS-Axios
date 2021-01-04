@@ -74,6 +74,7 @@ function registerBaseRouter () {
   })
 
   router.post('/base/post', function(req, res) {
+    // 这里 req.body 是空对象  Content-Type: text/plain; => Content-Type: application/json
     res.json(req.body)
   })
 

@@ -142,3 +142,15 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest
 "body-parser": "^1.18.3"
 ```
 webpack 是打包构建工具，webpack-dev-middleware 和 webpack-hot-middleware 是 2 个 express 的 webpack 中间件，ts-loader 和 tslint-loader 是 webpack 需要的 TypeScript 相关 loader，express 是 Node.js 的服务端框架，body-parser 是 express 的一个中间件，解析 body 数据用的
+
+## 需求分析
+
+### body
+
+`https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send`
+
+### header
+```json
+{
+  "content-type": "application/json;charset=utf-8"
+}

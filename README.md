@@ -148,8 +148,28 @@ webpack 是打包构建工具，webpack-dev-middleware 和 webpack-hot-middlewar
 ### body
 
 `https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send`
+处理 body 为 isPlainObject 的情况
+
+我们发现 `send` 方法的参数支持 `Document` 和 `BodyInit` 类型，`BodyInit` 包括了 `Blob`, `BufferSource`, `FormData`, `URLSearchParams`, `ReadableStream`、`USVString`，当没有数据的时候，我们还可以传入 `null`。
+
+但是我们最常用的场景还是传一个普通对象给服务端，例如：
+
+```typescript
+axios({
+  method: 'post',
+  url: '/base/post',
+  data: { 
+    a: 1,
+    b: 2 
+  }
+})
+```
+
+这个时候 `data`是不能直接传给 `send` 函数的，我们需要把它转换成 JSON 字符串。
+
 
 ### header
+并且在当我们传入的 `data` 为普通对象的时候，`headers` 如果没有配置 `Content-Type` 属性，需要自动设置请求 `header` 的 `Content-Type` 字段为：`application/json;charset=utf-8`。
 ```json
 {
   "content-type": "application/json;charset=utf-8"

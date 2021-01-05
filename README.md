@@ -102,3 +102,55 @@ let x: Named;
 let y = { name: 'Alice', location: 'Seattle' };
 x = y;
 ```
+
+## 初始化项目
+
+git clone https://github.com/alexjoverm/typescript-library-starter.git ts-axios
+cd ts-axios
+
+npm install
+
+### 优秀工具集成
+使用 TypeScript library starter 创建的项目集成了很多优秀的开源工具：
+
+使用 RollupJS 帮助我们打包。
+使用 Prettier 和 TSLint 帮助我们格式化代码以及保证代码风格一致性。
+使用 TypeDoc 帮助我们自动生成文档并部署到 GitHub pages。
+使用 Jest帮助我们做单元测试。
+使用 Commitizen帮助我们生成规范化的提交注释。
+使用 Semantic release帮助我们管理版本和发布。
+使用 husky帮助我们更简单地使用 git hooks。
+使用 Conventional changelog帮助我们通过代码提交信息自动生成 change log。
+
+### tsconfig.json
+
+详见 Typescript 官网 的介绍
+
+### XMLHttpRequest !important
+
+https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest
+
+### 依赖
+
+```json
+"webpack": "^4.28.4",
+"webpack-dev-middleware": "^3.5.0",
+"webpack-hot-middleware": "^2.24.3",
+"ts-loader": "^5.3.3",
+"tslint-loader": "^3.5.4",
+"express": "^4.16.4",
+"body-parser": "^1.18.3"
+```
+webpack 是打包构建工具，webpack-dev-middleware 和 webpack-hot-middleware 是 2 个 express 的 webpack 中间件，ts-loader 和 tslint-loader 是 webpack 需要的 TypeScript 相关 loader，express 是 Node.js 的服务端框架，body-parser 是 express 的一个中间件，解析 body 数据用的
+
+## 需求分析
+
+### body
+
+`https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send`
+
+### header
+```json
+{
+  "content-type": "application/json;charset=utf-8"
+}

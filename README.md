@@ -199,3 +199,27 @@ const axios = createInstance()
 ### 文件位置改动
 
 将核心的步骤文件放到了 /core 文件夹下..
+
+### axios 函数重载
+
+```ts
+axios({
+  url: '/extend/post',
+  method: 'post',
+  data: {
+    msg: 'hi'
+  }
+})
+// 同
+axios('/extend/post', {
+  method: 'post',
+  data: {
+    msg: 'hello'
+  }
+})
+```
+`JavaScript 中没有真正意义上的函数重载。`
+
+### 接口添加泛型参数
+
+见 /examples/extend 的demo

@@ -154,3 +154,10 @@ webpack 是打包构建工具，webpack-dev-middleware 和 webpack-hot-middlewar
 {
   "content-type": "application/json;charset=utf-8"
 }
+```
+## responseHeaders能在xhr.ts做处理，为什么data不也在xhr.ts中做处理呢？
+
+黄奕老师：
+`你可以理解 parseHeaders 也是为了构建响应数据对象 res，这部分是 xhr 函数处理的，xhr 函数的职责就是发送请求接收响应并构建响应对象，到这就结束了。而对res 的加工处理这部分逻辑需要摘出去，并且未来 axios 还要支持自定义响应对象的处理逻辑。`
+但是我并不能很清晰地 get 到老师表达的意思...
+我认为 parseHeaders 也可以算构建相应对象 res 之外的范畴 parseData 也可算在为了构建相应数据对象 res...

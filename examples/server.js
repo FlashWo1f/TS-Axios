@@ -43,7 +43,7 @@ registerBaseRouter()
 
 registerErrorRouter()
 
-// registerExtendRouter()
+registerExtendRouter()
 
 // registerInterceptorRouter()
 

@@ -20,4 +20,18 @@ export interface AxiosRequestConfig {
   data?: any
   params?: any
   headers?: any
+  // XMLHttpRequestResponseType TypeScript 自带 可 Ctrl+click 跳转查看
+  responseType?: XMLHttpRequestResponseType
+}
+
+export interface AxiosResponse {
+  data: any
+  status: number
+  statusText: string
+  headers: any
+  config: AxiosRequestConfig
+  request: any
+}
+export interface AxiosPromise extends Promise<AxiosResponse> {
+  // Promise 泛型接口
 }

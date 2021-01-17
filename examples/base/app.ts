@@ -56,26 +56,43 @@ axios({
     a: 1,
     b: 2
   }
+}).then(res => {
+  console.log(res.data, res)
 })
 
 axios({
   method: 'post',
   url: '/base/post',
-  headers: {
-    'content-type': 'application/json;'
-  },
   data: {
     a: 1,
     b: 2
-  }
+  },
+  // 设置之后 response.data 是json类型 否则是 text
+  responseType: 'json',
+}).then(res => {
+  console.log(res)
 })
 
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   headers: {
+//     'content-type': 'application/json',
+//     'Accept': 'application/json, text/plain, */*'
+//   },
+//   data: {
+//     a: 1,
+//     b: 2
+//   }
+// })
+
 // 浏览器自动解析 并且 自动配置合适的 Content-Type
+// 下面的例子中 浏览器自动添加 `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`
 const paramsString = 'q=URLUtils.searchParams&topic=api'
 const searchParams = new URLSearchParams(paramsString)
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  data: searchParams
-})
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   data: searchParams
+// })

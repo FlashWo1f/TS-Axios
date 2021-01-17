@@ -22,6 +22,7 @@ export interface AxiosRequestConfig {
   headers?: any
   // XMLHttpRequestResponseType TypeScript 自带 可 Ctrl+click 跳转查看
   responseType?: XMLHttpRequestResponseType
+  timeout?: number
 }
 
 export interface AxiosResponse {

@@ -41,7 +41,7 @@ registerSimpleRouter()
 
 registerBaseRouter()
 
-// registerErrorRouter()
+registerErrorRouter()
 
 // registerExtendRouter()
 

@@ -1,4 +1,4 @@
-import axios from '../../src/index'
+import axios, { AxiosError } from '../../src/index'
 
 
 axios({
@@ -29,8 +29,16 @@ setTimeout(() => {
 // 模拟超时
 axios({
   method: 'get',
-  url: '/error/get',
+  url: '/error/timeout',
   timeout: 2000,
 })
   .then(res => console.log(res))
-  .catch(e => console.log(e, e.message))
+  .catch((e: AxiosError) => {
+    console.log('e', e, e.code, e.config, e.isAxiosError, e.name, e.stack)
+    console.log('e.message', e.message)
+    console.log('e.code', e.code)
+    console.log('e.config', e.config)
+    console.log('e.isAxiosError', e.isAxiosError)
+    console.log('e.name', e.name)
+    console.log('e.stack', e.stack)
+  })

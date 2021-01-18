@@ -174,3 +174,72 @@ axios({
 {
   "content-type": "application/json;charset=utf-8"
 }
+```
+## responseHeaders能在xhr.ts做处理，为什么data不也在xhr.ts中做处理呢？
+
+黄奕老师：
+`你可以理解 parseHeaders 也是为了构建响应数据对象 res，这部分是 xhr 函数处理的，xhr 函数的职责就是发送请求接收响应并构建响应对象，到这就结束了。而对res 的加工处理这部分逻辑需要摘出去，并且未来 axios 还要支持自定义响应对象的处理逻辑。`
+但是我并不能很清晰地 get 到老师表达的意思...
+我认为 parseHeaders 也可以算构建相应对象 res 之外的范畴 parseData 也可算在为了构建相应数据对象 res...
+
+## 第六章 异常情况处理
+
+## 第七章 扩展接口
+
+混合对象实现思路很简单，首先这个对象是一个函数，其次这个对象要包括 Axios 类的所有原型属性和实例属性，我们首先来实现一个辅助函数 extend。
+```ts
+export function extend<T, U>(to: T, from: U): T & U {
+  for (const key in from) {
+    ;(to as T & U)[key] = from[key] as any
+  }
+  return to as T & U
+}
+```
+
+### 混合对象 创建实例
+
+在 `createInstance` 工厂函数的内部，我们首先实例化了 Axios 实例 context，接着创建instance 指向 `Axios.prototype.request` 方法，并绑定了`上下文 context`；接着通过 extend 方法把 context 中的原型方法和实例方法全部`拷贝到 instance 上`，这样就实现了一个`混合对象`：`instance 本身是一个函数，又拥有了 Axios 类的所有原型和实例属性`，最终把这个 instance 返回。由于这里 TypeScript 不能正确推断 instance 的类型，我们把它断言成 AxiosInstance 类型。
+
+这样我们就可以通过 createInstance 工厂函数创建了 axios，当直接调用 axios 方法就相当于执行了 Axios 类的 request 方法发送请求，当然我们也可以调用 `axios.get、axios.post` 等方法。
+
+```ts
+function createInstance(): AxiosInstance {
+  const context = new Axios()
+  // bind； 这边实现对象本身是方法 
+  const instance = Axios.prototype.request.bind(context)
+  // 且自身属性也是方法
+  extend(instance, context)
+
+  return instance as AxiosInstance
+}
+
+const axios = createInstance()
+```
+
+### 文件位置改动
+
+将核心的步骤文件放到了 /core 文件夹下..
+
+### axios 函数重载
+
+```ts
+axios({
+  url: '/extend/post',
+  method: 'post',
+  data: {
+    msg: 'hi'
+  }
+})
+// 同
+axios('/extend/post', {
+  method: 'post',
+  data: {
+    msg: 'hello'
+  }
+})
+```
+`JavaScript 中没有真正意义上的函数重载。`
+
+### 接口添加泛型参数
+
+见 /examples/extend 的demo

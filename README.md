@@ -15,6 +15,9 @@ let strLength1: number = (someValue as string).length
 let mySquare = createSquare({ width: 100, opacity: 0.5 } as SquareConfig)
 ```
 
+### type & interface 的区别
+`https://stackoverflow.com/questions/37233735/typescript-interfaces-vs-types`
+
 ### 重载
 
 天啦，typeScript 也有重载概念拉

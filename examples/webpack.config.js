@@ -11,15 +11,15 @@ module.exports = {
    * 每个子目录的下会创建一个 app.ts
    * app.ts 作为 webpack 构建的入口文件
    * entries 收集了多目录个入口文件，并且每个入口还引入了一个用于热更新的文件
-   * entries 是一个对象，key 为目录名
+   * entries 是一个对象，key 为目录名 value 为 ['webpack-hot-middleware/client', 'D:\\xxx\xxx\examples\base\app.ts']
    */
   entry: fs.readdirSync(__dirname).reduce((entries, dir) => {
     const fullDir = path.join(__dirname, dir)
     const entry = path.join(fullDir, 'app.ts')
+    // 本文件同级路径下为 文件夹且文件夹内存在 app.ts
     if (fs.statSync(fullDir).isDirectory() && fs.existsSync(entry)) {
       entries[dir] = ['webpack-hot-middleware/client', entry]
     }
-
     return entries
   }, {}),
 

@@ -2,7 +2,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import xhr from './xhr'
 import { buildURL } from '../helpers/url'
 import { transformRequest, transformResponse } from '../helpers/data'
-import { processHeaders } from '../helpers/headers'
+import { flattenHeaders, processHeaders } from '../helpers/headers'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   // config 复杂数据类型 按值传递 => 按址传递
@@ -17,6 +17,9 @@ function processConfig(config: AxiosRequestConfig): void {
   // 要先处理headers 因为下面 config.data 那边已经改掉了 data
   config.headers = transformHeaders(config)
   config.data = transformRequestData(config)
+  debugger
+  config.headers = flattenHeaders(config.headers, config.method!)
+  console.log('axiosaxios', config)
 }
 
 function transformRequestData(config: AxiosRequestConfig): void {

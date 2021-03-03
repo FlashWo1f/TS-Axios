@@ -259,3 +259,29 @@ axios('/extend/post', {
 拦截器 feature 实现中 interface<T> 很多，容易晕...
 
 要理顺哪些接口是对内的哪些是对用户的
+
+### flatten headers
+
+经过合并后的配置中的 headers 是一个复杂对象，多了 common、post、get 等属性，而这些属性中的值才是我们要真正添加到请求 header 中的。
+
+```js
+{
+  headers: {
+    common: {
+      Accept: 'application/json, text/plain, */*'
+    },
+    post: {
+      'Content-Type':'application/x-www-form-urlencoded'
+    }
+  }
+}
+```
+
+我们需要把它压成一级的，如下：
+
+```js
+headers: {
+  Accept: 'application/json, text/plain, */*',
+ 'Content-Type':'application/x-www-form-urlencoded'
+}
+```

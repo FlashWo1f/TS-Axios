@@ -47,7 +47,7 @@ registerExtendRouter()
 
 registerInterceptorRouter()
 
-// registerConfigRouter()
+registerConfigRouter()
 
 // registerCancelRouter()
 

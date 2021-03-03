@@ -20,3 +20,28 @@ export function extend<T, U>(to: T, from: U): T & U {
   }
   return to as T & U
 }
+
+// 深拷贝 lodash 版本太复杂
+export function deepMerge(...objs: any[]): any {
+  if (!objs || !objs.length) {
+    return
+  }
+  const result = Object.create(null)
+  objs.forEach(v => {
+    // debugger
+    if (!isPlainObject(v)) return
+    Object.keys(v).forEach(key => {
+      const val = v[key]
+      if (isPlainObject(val)) {
+        if (isPlainObject(result[key])) {
+          result[key] = deepMerge(result[key], val)
+        } else {
+          result[key] = deepMerge({}, val)
+        }
+      } else {
+        result[key] = val
+      }
+    })
+  })
+  return result
+}

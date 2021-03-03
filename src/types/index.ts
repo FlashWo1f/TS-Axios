@@ -23,6 +23,7 @@ export interface AxiosRequestConfig {
   // XMLHttpRequestResponseType TypeScript 自带 可 Ctrl+click 跳转查看
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  [propName: string]: any
 }
 
 export interface AxiosResponse<T = any> {

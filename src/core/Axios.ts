@@ -40,7 +40,12 @@ export default class Axios {
     }
     // 用户使用 axios.interceptor.request.use .. 去添加拦截器
     // 默认 chain 第一项的 resolved 就是 dispatchRequest 发送请求
-    // 可能是AxiosRequestConfig 和 AxiosPromise => 给出 any
+    // 可能是AxiosRequestConfig 和 AxiosResponse => 给出 any
+    // 也有同学跟我一样有这里的疑惑 https://coding.imooc.com/learn/questiondetail/196339.html
+    // 不能写 PromiseChain<AxiosRequestConfig | AxiosResponse>
+    // (个人看法)因为 response.use(res =>) 这其中的 res.data 是 any 类型 (好像不对，跟res.data没关系，只跟res有关系)
+    // 黄奕老师： 响应拦截器函数的参数是 T 类型，返回值的 Pomise 对应的也是 T 类型，
+    // 所以 PromiseChain 类型是 any，就是给 T 参数传递 any，表示不限制 ResolvedFn 的类型，而你定义联合类型本身就没什么意义，也不能这么做。
     const chain: PromiseChain<any>[] = [
       {
         resolved: dispatchRequest,

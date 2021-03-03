@@ -246,3 +246,16 @@ axios('/extend/post', {
 ### 接口添加泛型参数
 
 见 /examples/extend 的demo
+
+
+### 拦截器管理类实现
+
+整个过程是一个链式调用的方式，并且每个拦截器都可以支持同步和异步处理，我们自然而然地就联想到使用 Promise 链的方式来实现整个调用过程。
+
+在这个 Promise 链的执行过程中，请求拦截器 resolve 函数处理的是 config 对象，而相应拦截器 resolve 函数处理的是 response 对象。
+
+<img src="./img/interceptor.png" alt="interceptor">
+
+拦截器 feature 实现中 interface<T> 很多，容易晕...
+
+要理顺哪些接口是对内的哪些是对用户的

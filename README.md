@@ -248,7 +248,7 @@ axios('/extend/post', {
 见 /examples/extend 的demo
 
 
-### 拦截器管理类实现
+## 拦截器管理类实现
 
 整个过程是一个链式调用的方式，并且每个拦截器都可以支持同步和异步处理，我们自然而然地就联想到使用 Promise 链的方式来实现整个调用过程。
 
@@ -260,7 +260,7 @@ axios('/extend/post', {
 
 要理顺哪些接口是对内的哪些是对用户的
 
-### flatten headers
+## flatten headers
 
 经过合并后的配置中的 headers 是一个复杂对象，多了 common、post、get 等属性，而这些属性中的值才是我们要真正添加到请求 header 中的。
 
@@ -283,5 +283,59 @@ axios('/extend/post', {
 headers: {
   Accept: 'application/json, text/plain, */*',
  'Content-Type':'application/x-www-form-urlencoded'
+}
+```
+
+
+
+## 目前位置 项目的代码逻辑
+
+`src/axios.ts` 中通过 `createInstance(defaults)` 创建一个带有默认 defaults 的 axios 实例
+```js
+function createInstance(config: AxiosRequestConfig): AxiosInstance {
+  const context = new Axios(config)
+  const instance = Axios.prototype.request.bind(context)
+  // 满足 axios({...}) 和 axios.request({...})
+  extend(instance, context)
+
+  return instance as AxiosInstance
+}
+```
+
+当使用实例  axios.request() || axios() 时 执行 axios.request 方法。
+
+```ts
+// 合并 defaults && config  其中涉及到较多的数据合并处理  需要较强的模块化思想
+config = mergeConfig(this.defaults, config)
+const chain: PromiseChain<any>[] = [
+  {
+    resolved: dispatchRequest,
+    rejected: undefined
+  }
+]
+// 注册拦截器
+this.interceptors.request.forEach(interceptor => {
+  // 后加入的先执行
+  chain.unshift(interceptor)
+})
+this.interceptors.response.forEach(interceptor => {
+  chain.push(interceptor)
+})
+let promise = Promise.resolve(config)
+// 调用拦截器
+while (chain.length) {
+  const { resolved, rejected } = chain.shift()!
+  promise = promise.then(resolved, rejected)
+}
+```
+dispatchRequest 发送请求
+```ts
+function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  // 处理 config
+  processConfig(config)
+  return xhr(config).then(res => {
+    // 处理响应 res
+    return transformResponseData(res)
+  })
 }
 ```

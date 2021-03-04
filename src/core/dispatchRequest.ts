@@ -17,7 +17,7 @@ function processConfig(config: AxiosRequestConfig): void {
   // 要先处理headers 因为下面 config.data 那边已经改掉了 data
   config.headers = transformHeaders(config)
   config.data = transformRequestData(config)
-  debugger
+  // debugger
   config.headers = flattenHeaders(config.headers, config.method!)
   console.log('axiosaxios', config)
 }

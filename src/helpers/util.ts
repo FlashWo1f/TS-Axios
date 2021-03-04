@@ -26,10 +26,10 @@ export function deepMerge(...objs: any[]): any {
   if (!objs || !objs.length) {
     return
   }
+  // console.log("...objs", objs)
   const result = Object.create(null)
   objs.forEach(v => {
     // debugger
-    if (!isPlainObject(v)) return
     Object.keys(v).forEach(key => {
       const val = v[key]
       if (isPlainObject(val)) {

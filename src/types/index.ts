@@ -23,6 +23,8 @@ export interface AxiosRequestConfig {
   // XMLHttpRequestResponseType TypeScript 自带 可 Ctrl+click 跳转查看
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  transformRequest?: AxiosTransformer | AxiosTransformer[]
+  transformResponse?: AxiosTransformer | AxiosTransformer[]
   [propName: string]: any
 }
 
@@ -93,4 +95,8 @@ export interface ResolvedFn<T> {
 
 export interface RejectedFn {
   (err: any): any
+}
+
+export interface AxiosTransformer {
+  (data: any, headers?: any): any
 }

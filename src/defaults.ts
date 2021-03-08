@@ -1,4 +1,6 @@
 import { AxiosRequestConfig } from './types'
+import { processHeaders } from './helpers/headers'
+import { transformRequest, transformResponse } from './helpers/data'
 
 const defaults: AxiosRequestConfig = {
   method: 'get',
@@ -7,7 +9,20 @@ const defaults: AxiosRequestConfig = {
     common: {
       Accept: 'application/json, text/plain, */*'
     }
-  }
+  },
+  // 那如果 用户对 transformRequest & transformResponse 不去做修改
+  // 那么 transformRequest 还是和放到 dispatchRequest.ts 逻辑是一样的，只不过模块分离了，更清晰了。但对不熟悉 axios 的人看源码又更绕了一些...
+  transformRequest: [
+    function(data: any, headers: any): any {
+      processHeaders(headers, data)
+      return transformRequest(data)
+    }
+  ],
+  transformResponse: [
+    function(data: any): any {
+      return transformResponse(data)
+    }
+  ]
 }
 
 const methodsNoData = ['delete', 'get', 'head', 'options']

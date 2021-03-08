@@ -340,6 +340,19 @@ function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
 }
 ```
 
+## 请求和响应配置化
+其实 dispatchRequest 本来也就是这个 Promise chain 中的一个环节，请求和响应配置化就是去丰富 dispatchRequest 的能力，你可以理解为是一个默认处理环节吧。
+也将 dispatchRequest 中处理 headers 和 data 做了抽离和加强可维护性可扩展性
+具体可以看 `core/transform.ts` `core/dispatchRequest.ts`
+```ts
+export interface AxiosRequestConfig {
+  ...
+  + transformRequest?: AxiosTransformer | AxiosTransformer[]
+  + transformResponse?: AxiosTransformer | AxiosTransformer[]
+  [propName: string]: any
+}
+```
+
 ## 问题
 
 https://coding.imooc.com/learn/questiondetail/205383.html

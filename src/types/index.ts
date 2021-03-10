@@ -79,6 +79,10 @@ export interface AxiosInstance extends Axios {
   <T = any>(url: any, config?: any): AxiosPromise<T>
 }
 
+export interface AxiosStatic extends AxiosInstance {
+  create(config?: AxiosRequestConfig): AxiosInstance
+}
+
 // 拦截器
 export interface AxiosInterceptorManager<T> {
   // 安装拦截器

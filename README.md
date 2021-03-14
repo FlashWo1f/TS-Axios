@@ -353,6 +353,10 @@ export interface AxiosRequestConfig {
 }
 ```
 
+## 取消功能的设计
+
+`取消功能是我在这堂课开始之前对 axios 比较感兴趣的一个 feature 了，希望通过本次源码学习到其中的思想。`
+
 ## 问题
 
 https://coding.imooc.com/learn/questiondetail/205383.html

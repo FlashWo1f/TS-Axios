@@ -1,5 +1,5 @@
 import { Canceler, CancelExecutor, CancelTokenSource } from '../types'
-import Cancel from './cancel'
+import Cancel from './Cancel'
 interface ResolvePromise {
   (reason?: Cancel): void
 }

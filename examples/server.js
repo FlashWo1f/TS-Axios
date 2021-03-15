@@ -49,7 +49,7 @@ registerInterceptorRouter()
 
 registerConfigRouter()
 
-// registerCancelRouter()
+registerCancelRouter()
 
 // registerMoreRouter()
 

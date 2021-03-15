@@ -4,7 +4,7 @@ import defaults from './defaults'
 import { extend } from './helpers/util'
 import mergeConfig from './core/mergeConfig'
 import Cancel, { isCancel } from './cancel/Cancel'
-import CancelToken from './cancel/cancelToken'
+import CancelToken from './cancel/CancelToken'
 
 function createInstance(config: AxiosRequestConfig): AxiosStatic {
   const context = new Axios(config)

@@ -120,7 +120,7 @@ export interface CancelToken {
 }
 
 export interface Canceler {
-  (message: string): void
+  (message?: string): void
 }
 
 export interface CancelExecutor {

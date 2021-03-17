@@ -7,6 +7,7 @@ import Cancel, { isCancel } from './cancel/Cancel'
 import CancelToken from './cancel/CancelToken'
 
 function createInstance(config: AxiosRequestConfig): AxiosStatic {
+  // debugger
   const context = new Axios(config)
   const instance = Axios.prototype.request.bind(context)
   // 满足 axios({...}) 和 axios.request({...})

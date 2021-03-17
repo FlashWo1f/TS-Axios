@@ -340,6 +340,150 @@ function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
 }
 ```
 
+## 实现取消 feature 后整体的代码走向。
+
+### 创建 axios 实例
+从方法 `createInstance` 函数体的第一行开始 debugger
+```ts
+function createInstance(config: AxiosRequestConfig): AxiosStatic {
+  debugger
+  const context = new Axios(config)
+  const instance = Axios.prototype.request.bind(context)
+  // 满足 axios({...}) 和 axios.request({...})
+  extend(instance, context)
+
+  return instance as AxiosStatic
+}
+```
+首先进入 `new Axios(config)` Axios 中 constructor() 传入默认的 config 初始化 `this.defaults && this.interceptors`
+```ts
+constructor(initConfig: AxiosRequestConfig) {
+  this.defaults = initConfig
+  this.interceptors = {
+    request: new InterceptorManager<AxiosRequestConfig>(),
+    response: new InterceptorManager<AxiosResponse>()
+  }
+}
+```
+`extend(instance, context)` 后，返回的 instance 就是一个带有 Axios 所有属性的一个方法了， 兼容 `axios({...}) 和 axios.request({...})`
+
+下面的代码让 axios 从单例 => 多例
+```ts
+axios.create = function(config) {
+  return createInstance(mergeConfig(defaults, config))
+}
+```
+将类 `CancelToken` 、类 `Cancel`、方法 `isCancel` 挂载到 axios 方法对象上
+```ts
+axios.CancelToken = CancelToken
+axios.Cancel = Cancel
+axios.isCancel = isCancel
+```
+### 来到 /examples/cancel/app.ts 发送请求
+class CancelToken && function xhr 拦截操作 设计的较为巧妙(或许是我没见识), 可以学习学习
+```ts
+const CancelToken = axios.CancelToken
+// 创建 CancelToken 实例 返回包含 实例 token 和 触发取消的 cancel 函数（promise）的 source 对象
+const source = CancelToken.source()
+```
+
+正式进入发送请求
+```ts
+axios.get('/cancel/get', {
+  cancelToken: source.token
+}).catch(function(e) {
+  if (axios.isCancel(e)) {
+    console.log('Request canceled', e.message)
+  }
+})
+```
+进入 Axios.prototype.request 中, `mergeConfig(this.defaults, config)`
+
+merge 完成之后 进入 拦截器的收集和执行区域
+
+```ts
+// 初始化 chain 数组，唯一项为 dispatchRequest
+const chain: PromiseChain<any>[] = [
+  {
+    resolved: dispatchRequest,
+    rejected: undefined
+  }
+]
+// 请求拦截器 插在 dispatchRequest 的前面
+this.interceptors.request.forEach(interceptor => {
+  // 后加入的先执行
+  chain.unshift(interceptor)
+})
+// 响应拦截器 插在 dispatchRequest 的后面
+this.interceptors.response.forEach(interceptor => {
+  chain.push(interceptor)
+})
+// 将初始的 res = config 传给请求头。
+let promise = Promise.resolve(config)
+// 在 chain 逐一从头部开始执行
+while (chain.length) {
+  // const { resolved, rejected } = chain.shift() as PromiseChain<any> // 同下
+  const { resolved, rejected } = chain.shift()!
+  promise = promise.then(resolved, rejected)
+}
+```
+来到 `function dispatchRequest` 验证接口的cancel有没有已经执行，如果有直接 throw reason
+processConfig(config) && transformResponseData(res) 中有 transformRequest 以及 transformResponse 去操作 header, data 
+下面就是一系列的 处理 AxiosRequestConfig 的操作 代码健壮性
+
+```ts
+export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  // 如果 有 cancel.reason 就直接不发送请求了
+  throwIfCancellationRequested(config)
+  // config 复杂数据类型 按值传递 => 按址传递
+  processConfig(config)
+  return xhr(config).then(res => {
+    return transformResponseData(res)
+  })
+}
+```
+
+来到 `function xhr`
+
+xhr 方法返回用 Promise 包裹的 new XMLHttpRequest 实例去发送请求
+
+其中
+
+```ts
+// send 前取消请求
+if (cancelToken) {
+  // 传入 message(reason)后就到这里了
+  cancelToken.promise.then(reason => {
+    request.abort()
+    reject(reason)
+  })
+}
+
+request.send(data)
+```
+
+发送完成后 res => 送给 transfromResponseData(res) 去做处理再传给 响应拦截器
+那么 顺序是 请求拦截器 => transformRequest => transformResonse => 响应拦截器
+
+具体 `transform 与拦截器的异同` 可以再看看代码以及对应的注释
+
+最后 cancel/app.ts 中 source.cancel('Operation canceled by the user.')让 `function xhr` 中的下列代码得以执行  因为 source.cancel() 让 cancelToken.promise 的状态变为 resolved
+```ts
+if (cancelToken) {
+  // 传入 message(reason)后就到这里了
+  cancelToken.promise.then(reason => {
+    request.abort()
+    reject(reason)
+  })
+}
+```
+然后后面的 post 方法由于 source.token 已经被执行 所以在发送请求前的就被throwIfCancellationRequested() throw 了
+
+所以post请求对应的 console.log 先被打印出来...
+
+大致的过程就是如此，其中省略了大量的 header data config 的处理函数
+每个方法都各司其职 在模块化方面还是很有体现的。  可以多多学习它的实现方式
+
 ## 请求和响应配置化
 其实 dispatchRequest 本来也就是这个 Promise chain 中的一个环节，请求和响应配置化就是去丰富 dispatchRequest 的能力，你可以理解为是一个默认处理环节吧。
 也将 dispatchRequest 中处理 headers 和 data 做了抽离和加强可维护性可扩展性

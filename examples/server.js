@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-// const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 // const multipart = require('connect-multiparty')
 // const atob = require('atob')
 const webpack = require('webpack')
@@ -9,7 +9,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
 const path = require('path')
 
-// require('./server2')
+require('./server2')
 
 const app = express()
 const compiler = webpack(WebpackConfig)
@@ -29,7 +29,7 @@ app.use(express.static(__dirname))
 app.use(bodyParser.json())
 // app.use(bodyParser.text())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(cookieParser())
+app.use(cookieParser())
 
 // app.use(multipart({
 //   uploadDir: path.resolve(__dirname, 'upload-file')
@@ -51,7 +51,7 @@ registerConfigRouter()
 
 registerCancelRouter()
 
-// registerMoreRouter()
+registerMoreRouter()
 
 app.use(router)
 

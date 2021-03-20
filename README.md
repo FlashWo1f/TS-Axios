@@ -501,6 +501,12 @@ export interface AxiosRequestConfig {
 
 `取消功能是我在这堂课开始之前对 axios 比较感兴趣的一个 feature 了，希望通过本次源码学习到其中的思想。`
 
+## withCredentials
+
+有些时候我们会发一些跨域请求，比如 http://domain-a.com 站点发送一个 http://api.domain-b.com/get 的请求，默认情况下，浏览器会根据同源策略限制这种跨域请求，但是可以通过 CORS 技术解决跨域问题。
+
+在同域的情况下，我们发送请求会默认携带当前域下的 cookie，但是在跨域的情况下，默认是不会携带请求域下的 cookie 的，比如 http://domain-a.com 站点发送一个 http://api.domain-b.com/get 的请求，默认是不会携带 api.domain-b.com 域下的 cookie，如果我们想携带（很多情况下是需要的），只需要设置请求的 xhr 对象的 withCredentials 为 true 即可。
+
 ## 问题
 
 https://coding.imooc.com/learn/questiondetail/205383.html

@@ -10,6 +10,9 @@ const defaults: AxiosRequestConfig = {
       Accept: 'application/json, text/plain, */*'
     }
   },
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
   // 那如果 用户对 transformRequest & transformResponse 不去做修改
   // 那么 transformRequest 还是和放到 dispatchRequest.ts 逻辑是一样的，只不过模块分离了，更清晰了。但对不熟悉 axios 的人看源码又更绕了一些...
   transformRequest: [

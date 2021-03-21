@@ -507,6 +507,22 @@ export interface AxiosRequestConfig {
 
 在同域的情况下，我们发送请求会默认携带当前域下的 cookie，但是在跨域的情况下，默认是不会携带请求域下的 cookie 的，比如 http://domain-a.com 站点发送一个 http://api.domain-b.com/get 的请求，默认是不会携带 api.domain-b.com 域下的 cookie，如果我们想携带（很多情况下是需要的），只需要设置请求的 xhr 对象的 withCredentials 为 true 即可。
 
+## xsrf 防御
+
+最简单的CSRF
+攻击用户Alice登录和访问某银行网站A，保留cookie。
+Alice被某些信息诱导访问危险网站B。
+危险网站B上有一个<img>标签：<img src="http://www.examplebank.com/account=Alice&amount=1000&payfor=Badman" >
+这个标签的src不指向一张图片，而是一个http请求，这个请求向银行要求将Alice的1000元转给Badman，由于Alice的浏览器上有cookie，这样浏览器发出的这个请求就能得到响应执行。
+这样Alice的钱就被偷了
+
+### 关键
+
+坏人并不能伪造 cookie， 他只是利用服务器对浏览器的信任 
+
+
+因为CSRF攻击利用的是冲着浏览器分不清发起请求是不是真正的用户本人，所以防范的关键在于在请求中放入黑客所不能伪造的信息。从而防止黑客伪造一个完整的请求欺骗服务器。
+
 ## 问题
 
 https://coding.imooc.com/learn/questiondetail/205383.html

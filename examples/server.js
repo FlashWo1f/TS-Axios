@@ -24,7 +24,13 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(webpackHotMiddleware(compiler))
 
-app.use(express.static(__dirname))
+app.use(express.static(__dirname, {
+  setHeaders(res) {
+    // 在 localhost:8080/more/ 请求中的 Response Headers 中会有一个字段 
+    // Set-Cookie: XSRF-TOKEN-D=1234abc; Path=/ 
+    res.cookie('XSRF-TOKEN-D', '1234abc')
+  }
+}))
 
 app.use(bodyParser.json())
 // app.use(bodyParser.text())

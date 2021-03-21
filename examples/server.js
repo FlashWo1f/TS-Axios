@@ -1,13 +1,14 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-// const multipart = require('connect-multiparty')
+const multipart = require('connect-multiparty')
 // const atob = require('atob')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
 const path = require('path')
+const fs = require('fs')
 
 require('./server2')
 
@@ -37,9 +38,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-// app.use(multipart({
-//   uploadDir: path.resolve(__dirname, 'upload-file')
-// }))
+const DIR_NAME = 'upload-file'
+fs.mkdirSync(path.join(__dirname, DIR_NAME), 0777);
+
+app.use(multipart({
+  uploadDir: path.resolve(__dirname, DIR_NAME)
+}))
 
 const router = express.Router()
 

@@ -16,11 +16,23 @@ document.cookie = 'a=b'
 
 // xsrf 防御  在请求头中添加 cookie 中的 token, 让服务端去判断请求头中的 token 而不是 cookie 中的
 
-const instance = axios.create({
-  xsrfCookieName: 'XSRF-TOKEN-D',
-  xsrfHeaderName: 'X-XSRF-TOKEN-D'
-})
+// const instance = axios.create({
+//   xsrfCookieName: 'XSRF-TOKEN-D',
+//   xsrfHeaderName: 'X-XSRF-TOKEN-D'
+// })
 
-instance.get('/more/get').then(res => {
-  console.log('/more/get', res)
+// instance.get('/more/get').then(res => {
+//   console.log('/more/get', res)
+// })
+
+// HTTP 授权
+axios.post('/more/post', {
+  a: 1
+}, {
+  auth: {
+    username: 'Yee',
+    password: '123456'
+  }
+}).then(res => {
+  console.log(res)
 })

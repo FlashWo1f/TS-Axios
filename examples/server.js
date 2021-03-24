@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const multipart = require('connect-multiparty')
-// const atob = require('atob')
+const atob = require('atob')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
@@ -39,7 +39,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 const DIR_NAME = 'upload-file'
-fs.mkdirSync(path.join(__dirname, DIR_NAME), 0777);
+
+fs.mkdirSync(path.join(__dirname, DIR_NAME), { recursive: true });
 
 app.use(multipart({
   uploadDir: path.resolve(__dirname, DIR_NAME)
@@ -205,7 +206,7 @@ function registerMoreRouter () {
   router.post('/more/post', function(req, res) {
     const auth = req.headers.authorization
     const [type, credentials] = auth.split(' ')
-    console.log(atob(credentials))
+    console.log('HTTP 授权', atob(credentials))
     const [username, password] = atob(credentials).split(':')
     if (type === 'Basic' && username === 'Yee' && password === '123456') {
       res.json(req.body)

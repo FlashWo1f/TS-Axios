@@ -1,4 +1,5 @@
 import axios from '../../src/index'
+import { AxiosError } from '../../src/types/index'
 
 document.cookie = 'a=b'
 
@@ -26,13 +27,31 @@ document.cookie = 'a=b'
 // })
 
 // HTTP 授权
-axios.post('/more/post', {
-  a: 1
-}, {
-  auth: {
-    username: 'Yee',
-    password: '123456'
+// axios.post('/more/post', {
+//   a: 1
+// }, {
+//   auth: {
+//     username: 'Yee',
+//     password: '123456'
+//   }
+// }).then(res => {
+//   console.log(res)
+// })
+
+// 自定义合法状态码
+
+axios.get('/more/304').then(res => {
+  console.log(res)
+}).catch((e: AxiosError) => {
+  console.log('should catch error', e.message)
+})
+
+axios.get('/more/304', {
+  validateStatus(status) {
+    return status >= 200 && status < 400
   }
 }).then(res => {
   console.log(res)
+}).catch((e: AxiosError) => {
+  console.log('should be success', e.message)
 })

@@ -1,4 +1,4 @@
-import { isDate, isPlainObject } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
   protocol: string
@@ -17,41 +17,55 @@ function encode(val: string): string {
 }
 
 // 根据 params 生成 get 方法后的 search params
-export function buildURL(url: string, params?: any): string {
+export function buildURL(
+  url: string,
+  params?: any,
+  paramsSerializer?: (params: any) => string
+): string {
   if (!params) {
     return url
   }
-  const parts: string[] = []
-  Object.keys(params).forEach(key => {
-    const val = params[key]
-    if (val === null || typeof val === undefined) {
-      return
-    }
-    let values = []
-    if (Array.isArray(val)) {
-      values = val
-      key += '[]'
-    } else {
-      values = [val]
-    }
 
-    values.forEach(v => {
-      if (isDate(v)) {
-        v = v.toISOString()
-      } else if (isPlainObject(v)) {
-        v = JSON.stringify(v)
+  let serializedParams
+
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    serializedParams = params.toString()
+  } else {
+    const parts: string[] = []
+    Object.keys(params).forEach(key => {
+      const val = params[key]
+      if (val === null || typeof val === undefined) {
+        return
       }
-      parts.push(`${encode(key)}=${encode(v)}`)
-    })
-  })
+      let values = []
+      if (Array.isArray(val)) {
+        values = val
+        key += '[]'
+      } else {
+        values = [val]
+      }
 
-  let serializedParams = parts.join('&')
+      values.forEach(v => {
+        if (isDate(v)) {
+          v = v.toISOString()
+        } else if (isPlainObject(v)) {
+          v = JSON.stringify(v)
+        }
+        parts.push(`${encode(key)}=${encode(v)}`)
+      })
+    })
+
+    serializedParams = parts.join('&')
+  }
+
   if (serializedParams) {
     const markIndex = url.indexOf('#')
     if (markIndex !== -1) {
       url = url.slice(0, markIndex)
     }
-    url += (serializedParams.includes('?') ? '&' : '?') + serializedParams
+    url += (url.includes('?') ? '&' : '?') + serializedParams
   }
   return url
 }

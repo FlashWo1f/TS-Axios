@@ -10,6 +10,7 @@ export function transformRequest(data: any): any {
 
 export function transformResponse(data: any): any {
   if (typeof data === 'string') {
+    // 如果 data 是 "{ 'a': 1 }" || "{ a: 1 }" 都是会报错的  一定要这样 '{ "a: 1" }' ps: 空格无所谓
     try {
       data = JSON.parse(data)
     } catch (e) {
